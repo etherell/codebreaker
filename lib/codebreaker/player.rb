@@ -1,36 +1,47 @@
 module Codebreaker
   class Player
-    DIFFICULTIES = %w[Easy Medium Hell]
+    DATA_PATH = "./data/players.yaml".freeze
 
-    attr_reader rating, name, difficulty, attempts_total,
-                attempts_used, hints_total, hints_used
+    attr_reader :difficulty
+    attr_accessor :name, :attempts_total, :attempts_used, :hints_total, :hints_used
 
-    def initialize(name)
-      @rating = 0
-      @name = "" if name.length.between?(3, 20)
-      @difficulty = ""
-      @attempts_total = 0
-      @attempts_used = 0
-      @hints_total = 0
+    def difficulty=(difficulty)
+      @difficulty = difficulty
       @hints_used = 0
+      @attempts_used = 0
+      set_total_attempts_and_hints
     end
 
-    def name=(name)
-      @name = name if name.length.between?(3, 20)
+    def set_total_attempts_and_hints
+      @attempts_total, @hints_total = case difficulty
+                                      when "easy" then [15, 2]
+                                      when "medium" then [10, 1]
+                                      when "hell" then [5, 1]
+                                      end
     end
 
-    def set_start_params
-      case difficulty
-      when "Easy"
-        attempts_total = 15
-        hints_total = 2
-      when "medium"
-        attempts_total = 10
-        hints_total = 1
-      when "Hell"
-        attempts_total = 5
-        hints_total = 1
-      end
+    def has_hints?
+      hints_total > hints_used
+    end
+
+    def has_attempts?
+      attempts_total > attempts_used
+    end
+
+    def hints_left
+      hints_total - hints_used
+    end
+
+    def attempts_left
+      attempts_total - attempts_used
+    end
+
+    def self.all
+      return [] unless File.exist?(DATA_PATH)
+
+      stats = YAML.safe_load(File.read(DATA_PATH), permitted_classes: [Codebreaker::Stats, Codebreaker::Player],
+                                                   aliases: true)
+      stats&.players
     end
   end
 end

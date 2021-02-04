@@ -1,58 +1,50 @@
 module Codebreaker
   class Game
-    attr_reader :result
+    attr_accessor :secret_number, :player_number
 
     def initialize
-      @secret_code = ""
-      @input_number = ""
       @result = []
-      @players = []
+      @secret_number = generate_code
     end
 
-    def start
-      @secret_code = generate_code
+    def give_hint(player)
+      player.hints_used += 1
+      secret_number_arr.sample
     end
 
-    def input_valid?(input)
-      return false unless valid_number?(input)
-      @player_input = input
-      true
-    end
-
-    def check_input_number
+    def result
       check_complete_match
       check_partial_match
-    end
-
-    def give_hint
-      secret_code_arr.sample
+      @result.join.to_s
     end
 
     def win?
-      @result.map { |value| value == '+' }.length == 4
+      @result.length == 4 && @result.all?(/\+/)
+    end
+
+    def clear_result
+      @result = []
     end
 
     private
 
-    include Codebreaker::PropertyValidatable
-
     def check_complete_match
-      secret_code_arr.zip(input_arr).map do |secret_num, input_num|
-        break if @input.empty?
+      secret_number_arr.zip(player_number_arr).map do |secret_num, input_num|
+        break if @player_number.empty?
         next if secret_num != input_num
 
-        @result << '+'
-        @input.slice!(input_num.to_s)
+        @result << "+"
+        @player_number.slice!(input_num.to_s)
       end
     end
 
     def check_partial_match
-      secret_code_arr.each do |secret_num|
-        break if @input.empty?
-        next unless input_arr.include?(secret_num)
+      secret_number_arr.each do |secret_num|
+        break if @player_number.empty?
+        next unless player_number_arr.include?(secret_num)
 
-        @result << '-'
-        @input.slice!(secret_num.to_s)
+        @result << "-"
+        @player_number.slice!(secret_num.to_s)
       end
     end
 
@@ -62,12 +54,12 @@ module Codebreaker
       arr.join
     end
 
-    def input_arr
-      @input.split("").map(&:to_i)
+    def player_number_arr
+      player_number.split("").map(&:to_i)
     end
 
-    def secret_code_arr
-      @secret_code.split("").map(&:to_i)
+    def secret_number_arr
+      secret_number.split("").map(&:to_i)
     end
   end
 end

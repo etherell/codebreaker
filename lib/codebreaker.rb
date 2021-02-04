@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 require "codebreaker/version"
-require "codebreaker/validations"
 require "codebreaker/game"
 require "codebreaker/player"
+require "codebreaker/stats"
+require "codebreaker/validator"
 require "pry-byebug"
+require "faker"
 
 module Codebreaker
   class Error < StandardError; end
