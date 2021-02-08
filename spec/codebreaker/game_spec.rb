@@ -1,86 +1,99 @@
-require "spec_helper"
+require 'spec_helper'
 
 module Codebreaker
   RSpec.describe Game do
-    let(:game) { Game.new }
+    let(:game) { described_class.new }
 
-    context "when game start" do
-      before(:each) { game.start }
+    describe '#initialize' do
+      context 'when game starts it initializes with secret number' do
+        subject(:game_secret_number) { game.secret_number }
 
-      it "saves secret code" do
-        expect(game.instance_variable_get(:@secret_code)).not_to be_empty
-      end
+        it 'has secret number' do
+          expect(game_secret_number).not_to be_nil
+        end
 
-      it "saves 4 numbers secret code" do
-        expect(game.instance_variable_get(:@secret_code).size).to eq(4)
-      end
-
-      it "saves secret code with numbers from 1 to 6" do
-        expect(game.instance_variable_get(:@secret_code)).to match(/[1-6]+/)
-      end
-    end
-
-    context "with valid input" do
-      let(:input) { "1234" }
-      let(:secret_code) { "1433" }
-
-      before(:each) do
-        game.instance_variable_set(:@secret_code, secret_code)
-        game.instance_variable_set(:@input, input)
-        game.check_input_number
-      end
-
-      it "has one partial and two complete matched number" do
-        expect(game.result).to eq(%w[+ + -])
-      end
-
-      it "deleted from input matched numbers" do
-        expect(game.instance_variable_get(:@input).length).to eq(1)
-      end
-    end
-
-    describe "#give_hint" do
-      let(:secret_code) { "1433" }
-      before(:each) { game.instance_variable_set(:@secret_code, secret_code) }
-
-      it "returns random number from secret number" do
-        expect(game.instance_variable_get(:@secret_code)).to include(game.give_hint.to_s)
-      end
-
-      it "returns only one number" do
-        expect(game.give_hint.to_s.length).to eq(1)
-      end
-    end
-
-    describe "#win" do
-      before(:each) do
-        game.instance_variable_set(:@secret_code, secret_code)
-        game.instance_variable_set(:@input, input)
-        game.check_input_number
-      end
-
-      subject(:player_win?) { game.win? }
-      let(:win_result) { %w[+ + + +] }
-      let(:secret_code) { "1234" }
-
-      context "when player wins" do
-        let(:input) { "1234" }
-  
-        it { expect(player_win?).to be_truthy }
-
-        it "returns array with all complete values" do
-          expect(game.result).to eq(win_result)
+        it 'has valid secret number' do
+          expect(game_secret_number).to match(/^[1-6]{4}$/)
         end
       end
+    end
 
-      context "when player loose" do
-        let(:input) { "1235" }
+    describe '#player_number=' do
+      subject(:set_player_number) { game.player_number = new_player_number }
+
+      let(:new_player_number) { '1234' }
+      let(:result) { '----' }
+
+      before { game.instance_variable_set(:@result, result) }
+
+      context 'when player number set' do
+        it 'changes game player_number' do
+          expect { set_player_number }.to change { game.instance_variable_get(:@player_number) }
+        end
+
+        it 'sets appropriate player_number' do
+          set_player_number
+          expect(game.instance_variable_get(:@player_number)).to eq(new_player_number)
+        end
+
+        it 'clears result' do
+          expect { set_player_number }.to change { game.instance_variable_get(:@result) }.from(result).to(nil)
+        end
+      end
+    end
+
+    describe '#win?' do
+      subject(:player_win?) { game.win? }
+
+      before { game.instance_variable_set(:@result, result) }
+
+      context 'when player wins' do
+        let(:result) { '++++' }
+
+        it { expect(player_win?).to be_truthy }
+      end
+
+      context 'when player loose' do
+        let(:result) { '--' }
 
         it { expect(player_win?).to be_falsey }
+      end
+    end
 
-        it "returns array with all complete values" do
-          expect(game.result).to_not eq(win_result)
-        end
+    RSpec.shared_examples 'a game with appropriate result' do
+      subject(:game_result) { game.result }
+
+      before do
+        game.instance_variable_set(:@secret_number, secret_number)
+        game.instance_variable_set(:@player_number, player_number)
+      end
+
+      it { expect(game_result).to eq(expected_result) }
+    end
+
+    describe '#result' do
+      context 'with all partial matches' do
+        let(:secret_number) { '6543' }
+        let(:player_number) { '3456' }
+        let(:expected_result) { '----' }
+
+        it_behaves_like 'a game with appropriate result'
+      end
+
+      context 'with all total matches' do
+        let(:secret_number) { '1234' }
+        let(:player_number) { '1234' }
+        let(:expected_result) { '++++' }
+
+        it_behaves_like 'a game with appropriate result'
+      end
+
+      context 'with partial and total matches' do
+        let(:secret_number) { '1234' }
+        let(:player_number) { '3124' }
+        let(:expected_result) { '+---' }
+
+        it_behaves_like 'a game with appropriate result'
       end
     end
   end

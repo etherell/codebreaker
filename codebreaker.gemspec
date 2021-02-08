@@ -1,49 +1,43 @@
-# stub: codebreaker 0.1.0 ruby lib
+# frozen_string_literal: true
 
-Gem::Specification.new do |s|
-  s.name = "codebreaker".freeze
-  s.version = "0.1.0"
+require_relative 'lib/codebreaker/version'
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
-  if s.respond_to? :metadata=
-    s.metadata = { "homepage_uri" => "https://github.com/etherell/codebreaker",
-                   "source_code_uri" => "https://github.com/etherell/codebreaker" }
+Gem::Specification.new do |spec|
+  spec.name          = 'codebreaker'
+  spec.version       = Codebreaker::VERSION
+  spec.authors       = ['etherell']
+  spec.email         = ['kostyaetherell@gmail.com']
+
+  spec.summary       = 'Codebreaker game'
+  spec.description   = 'Second rubygarage task'
+  spec.homepage      = 'https://github.com/etherell/codebreaker'
+  spec.license       = 'MIT'
+  spec.required_ruby_version = Gem::Requirement.new('>= 2.7.2')
+
+  spec.metadata['homepage_uri'] = spec.homepage
+  spec.metadata['source_code_uri'] = 'https://github.com/etherell/codebreaker'
+
+  # Specify which files should be added to the gem when it is released.
+  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
+  spec.files = Dir.chdir(File.expand_path(__dir__)) do
+    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{\A(?:test|spec|features)/}) }
   end
-  s.require_paths = ["lib".freeze]
-  s.authors = ["etherell".freeze]
-  s.bindir = "exe".freeze
-  s.date = "2021-01-30"
-  s.description = "Second rubygarage task".freeze
-  s.email = ["kostyaetherell@gmail.com".freeze]
-  s.files = [".circleci/config.yml".freeze, ".gitignore".freeze, ".rspec".freeze, ".rubocop.yml".freeze,
-             "CHANGELOG.md".freeze, "Gemfile".freeze, "Gemfile.lock".freeze, "LICENSE.txt".freeze, "README.md".freeze, "Rakefile".freeze, "bin/console".freeze, "bin/setup".freeze, "codebreaker.gemspec".freeze, "lib/codebreaker.rb".freeze, "lib/codebreaker/game.rb".freeze, "lib/codebreaker/player.rb".freeze, "lib/codebreaker/validations.rb".freeze, "lib/codebreaker/version.rb".freeze]
-  s.homepage = "https://github.com/etherell/codebreaker".freeze
-  s.licenses = ["MIT".freeze]
-  s.required_ruby_version = Gem::Requirement.new(">= 2.7.2".freeze)
-  s.rubygems_version = "3.2.3".freeze
-  s.summary = "Codebreaker game".freeze
+  spec.bindir        = 'exe'
+  spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
+  spec.require_paths = ['lib']
 
-  s.installed_by_version = "3.2.3" if s.respond_to? :installed_by_version
+  # Uncomment to register a new dependency of your gem
+  # spec.add_dependency "example-gem", "~> 1.0"
+  spec.add_dependency 'rake'
+  spec.add_development_dependency 'fasterer'
+  spec.add_development_dependency 'pry-byebug'
+  spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'rubocop-performance'
+  spec.add_development_dependency 'rubocop-rspec'
+  spec.add_development_dependency 'rubycritic'
+  spec.add_development_dependency 'simplecov'
 
-  s.specification_version = 4 if s.respond_to? :specification_version
-
-  if s.respond_to? :add_runtime_dependency
-    s.add_runtime_dependency("rake".freeze, [">= 0"])
-    s.add_development_dependency("rspec".freeze, [">= 0"])
-    s.add_development_dependency("fasterer".freeze, [">= 0"])
-    s.add_development_dependency("pry-byebug".freeze, [">= 0"])
-    s.add_development_dependency("rubocop".freeze, [">= 0"])
-    s.add_development_dependency("rubocop-rspec".freeze, [">= 0"])
-    s.add_development_dependency("rubycritic".freeze, [">= 0"])
-    s.add_development_dependency("faker".freeze, [">= 0"])
-  else
-    s.add_dependency("rake".freeze, [">= 0"])
-    s.add_dependency("rspec".freeze, [">= 0"])
-    s.add_dependency("fasterer".freeze, [">= 0"])
-    s.add_dependency("pry-byebug".freeze, [">= 0"])
-    s.add_dependency("rubocop".freeze, [">= 0"])
-    s.add_dependency("rubocop-rspec".freeze, [">= 0"])
-    s.add_dependency("rubycritic".freeze, [">= 0"])
-    s.add_dependency("faker".freeze, [">= 0"])
-  end
+  # For more information and examples about making a new gem, checkout our
+  # guide at: https://bundler.io/guides/creating_gem.html
 end
