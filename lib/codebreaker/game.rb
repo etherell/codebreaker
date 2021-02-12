@@ -1,14 +1,9 @@
-# frozen_string_literal: true
-
 module Codebreaker
   class Game
-    COMPLETE_MATCH = '+'
-    PARTIAL_MATCH = '-'
-
     attr_reader :secret_number
 
     def initialize
-      @secret_number = generate_secret_code
+      @secret_number = generate_secret_number
       @player_number = ''
     end
 
@@ -27,7 +22,7 @@ module Codebreaker
 
     private
 
-    def generate_secret_code
+    def generate_secret_number
       Array.new(4) { rand(1..6) }.join
     end
 
@@ -40,7 +35,7 @@ module Codebreaker
         next if secret_num != input_num
 
         @player_number.slice!(input_num)
-        COMPLETE_MATCH
+        Consts::COMPLETE_MATCH
       end
     end
 
@@ -50,7 +45,7 @@ module Codebreaker
         next unless @player_number.chars.include?(secret_num)
 
         @player_number.slice!(secret_num)
-        PARTIAL_MATCH
+        Consts::PARTIAL_MATCH
       end
     end
   end

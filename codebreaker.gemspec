@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 
 require_relative 'lib/codebreaker/version'
 
@@ -30,7 +29,6 @@ Gem::Specification.new do |spec|
   # spec.add_dependency "example-gem", "~> 1.0"
   spec.add_dependency 'rake'
   spec.add_development_dependency 'fasterer'
-  spec.add_development_dependency 'pry-byebug'
   spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'rubocop-performance'

@@ -1,11 +1,8 @@
-# frozen_string_literal: true
-
 require 'codebreaker/version'
+require 'codebreaker/consts'
 require 'codebreaker/game'
 require 'codebreaker/player'
-require 'codebreaker/validator'
-require 'codebreaker/hints_manager'
-require 'pry-byebug'
+require 'codebreaker/game_statistic'
 
 module Codebreaker
 end
