@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
 
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"
-  spec.add_dependency 'rake'
+  spec.add_development_dependency 'rake'
   spec.add_development_dependency 'fasterer'
   spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'rubocop'

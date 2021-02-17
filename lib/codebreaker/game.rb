@@ -5,6 +5,7 @@ module Codebreaker
     def initialize
       @secret_number = generate_secret_number
       @player_number = ''
+      @result = ''
     end
 
     def player_number=(player_number)
@@ -17,7 +18,8 @@ module Codebreaker
     end
 
     def result
-      @result ||= numbers_complete_comparison.concat(numbers_partial_comparison).join.to_s
+      set_result if @result.empty?
+      @result
     end
 
     private
@@ -27,25 +29,40 @@ module Codebreaker
     end
 
     def clear_result
-      @result = nil
+      @result = ''
+    end
+
+    def set_result
+      copy_secret_number
+      numbers_complete_comparison
+      numbers_partial_comparison
+    end
+
+    def copy_secret_number
+      @secret_number_copy = @secret_number.dup
     end
 
     def numbers_complete_comparison
-      @secret_number.chars.zip(@player_number.chars).map do |secret_num, input_num|
-        next if secret_num != input_num
+      @secret_number_copy.chars.zip(@player_number.chars).each do |secret_digit, input_digit|
+        next unless secret_digit == input_digit
 
-        @player_number.slice!(input_num)
-        Consts::COMPLETE_MATCH
+        delete_digit_from_numbers(secret_digit)
+        @result << Consts::COMPLETE_MATCH
       end
     end
 
+    def delete_digit_from_numbers(digit)
+      @player_number.sub!(digit, '')
+      @secret_number_copy.sub!(digit, '')
+    end
+
     def numbers_partial_comparison
-      @secret_number.chars.map do |secret_num|
+      @secret_number_copy.chars.each do |secret_num|
         next if @player_number.empty?
         next unless @player_number.chars.include?(secret_num)
 
-        @player_number.slice!(secret_num)
-        Consts::PARTIAL_MATCH
+        @player_number.sub!(secret_num, '')
+        @result << Consts::PARTIAL_MATCH
       end
     end
   end

@@ -2,14 +2,21 @@ require 'spec_helper'
 
 module Codebreaker
   RSpec.describe GameStatistic do
-    let(:game_stats) { described_class.new }
+    let(:game_stats) { described_class.new(difficulty) }
     let(:hints_total) { 2 }
     let(:secret_number) { '1234' }
     let(:difficulty) { 'easy' }
 
-    before do
-      game_stats.difficulty = difficulty
-      game_stats.secret_number = secret_number
+    before { game_stats.secret_number = secret_number }
+
+    RSpec.shared_examples 'a player with appropriate attempts and hints quantity' do
+      it 'has appropriate attempts quantity' do
+        expect(game_stats.instance_variable_get(:@attempts_total)).to eq(attempts_total)
+      end
+
+      it 'has appropriate hints quantity' do
+        expect(game_stats.instance_variable_get(:@hints_total)).to eq(hints_total)
+      end
     end
 
     describe '#initialize' do
@@ -22,21 +29,7 @@ module Codebreaker
           expect(game_stats.instance_variable_get(:@attempts_used)).to eq(0)
         end
       end
-    end
 
-    RSpec.shared_examples 'a player with appropriate attempts and hints quantity' do
-      before { game_stats.difficulty = difficulty }
-
-      it 'has appropriate attempts quantity' do
-        expect(game_stats.instance_variable_get(:@attempts_total)).to eq(attempts_total)
-      end
-
-      it 'has appropriate hints quantity' do
-        expect(game_stats.instance_variable_get(:@hints_total)).to eq(hints_total)
-      end
-    end
-
-    describe '#difficulty=' do
       context 'when difficulty easy' do
         let(:difficulty) { 'easy' }
         let(:attempts_total) { 15 }

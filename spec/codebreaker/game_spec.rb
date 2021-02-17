@@ -37,7 +37,7 @@ module Codebreaker
         end
 
         it 'clears result' do
-          expect { set_player_number }.to change { game.instance_variable_get(:@result) }.from(result).to(nil)
+          expect { set_player_number }.to change { game.instance_variable_get(:@result) }.from(result).to('')
         end
       end
     end
@@ -60,40 +60,29 @@ module Codebreaker
       end
     end
 
-    RSpec.shared_examples 'a game with appropriate result' do
+    describe '#result' do
       subject(:game_result) { game.result }
 
-      before do
-        game.instance_variable_set(:@secret_number, secret_number)
-        game.instance_variable_set(:@player_number, player_number)
-      end
-
-      it { expect(game_result).to eq(expected_result) }
-    end
-
-    describe '#result' do
-      context 'with all partial matches' do
-        let(:secret_number) { '6543' }
-        let(:player_number) { '3456' }
-        let(:expected_result) { '----' }
-
-        it_behaves_like 'a game with appropriate result'
-      end
-
-      context 'with all total matches' do
-        let(:secret_number) { '1234' }
-        let(:player_number) { '1234' }
-        let(:expected_result) { '++++' }
-
-        it_behaves_like 'a game with appropriate result'
-      end
-
-      context 'with partial and total matches' do
-        let(:secret_number) { '1234' }
-        let(:player_number) { '3124' }
-        let(:expected_result) { '+---' }
-
-        it_behaves_like 'a game with appropriate result'
+      context 'when have some result' do
+        [
+          { secret_number: '6543', input: '5643', result: '++--' },
+          { secret_number: '6543', input: '6411', result: '+-' },
+          { secret_number: '6543', input: '6544', result: '+++' },
+          { secret_number: '6543', input: '3456', result: '----' },
+          { secret_number: '6543', input: '6666', result: '+' },
+          { secret_number: '6543', input: '2666', result: '-' },
+          { secret_number: '6543', input: '2222', result: '' },
+          { secret_number: '6666', input: '1661', result: '++' },
+          { secret_number: '1234', input: '3124', result: '+---' },
+          { secret_number: '1234', input: '1524', result: '++-' },
+          { secret_number: '1234', input: '1234', result: '++++' }
+        ].each do |line|
+          it "returns #{line[:result]} when secret number - #{line[:secret_number]} and input - #{line[:input]}" do
+            game.instance_variable_set(:@secret_number, line[:secret_number])
+            game.instance_variable_set(:@player_number, line[:input])
+            expect(game_result).to eq(line[:result])
+          end
+        end
       end
     end
   end

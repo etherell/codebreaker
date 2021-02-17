@@ -1,14 +1,11 @@
 module Codebreaker
   class GameStatistic
-    attr_reader :difficulty
+    attr_reader :difficulty, :secret_number
     attr_accessor :attempts_total, :attempts_used, :hints_total, :player_name, :hints
 
-    def initialize
+    def initialize(difficulty)
       @hints_used = 0
       @attempts_used = 0
-    end
-
-    def difficulty=(difficulty)
       @difficulty = difficulty
       set_total_attempts_and_hints
     end
@@ -49,7 +46,7 @@ module Codebreaker
     private
 
     def prepare_hints
-      @hints = @secret_number.chars.shuffle.take(@hints_total)
+      @hints = secret_number.chars.shuffle.take(@hints_total)
     end
 
     def set_total_attempts_and_hints
