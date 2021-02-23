@@ -1,5 +1,5 @@
 module Codebreaker
-  module Consts
+  module Constants
     COMPLETE_MATCH = '+'.freeze
     PARTIAL_MATCH = '-'.freeze
     DIFFICULTIES = {
@@ -8,5 +8,6 @@ module Codebreaker
       'hell' => { attempts: 5, hints: 1 }
     }.freeze
     NOT_PUBLIC_PARAMS = %i[@hints @secret_number].freeze
+    WIN_RESULT = '++++'.freeze
   end
 end

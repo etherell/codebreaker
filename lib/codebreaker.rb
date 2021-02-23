@@ -1,5 +1,5 @@
 require 'codebreaker/version'
-require 'codebreaker/consts'
+require 'codebreaker/constants'
 require 'codebreaker/game'
 require 'codebreaker/player'
 require 'codebreaker/game_statistic'

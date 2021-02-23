@@ -2,7 +2,13 @@ require 'spec_helper'
 
 module Codebreaker
   RSpec.describe Game do
-    let(:game) { described_class.new }
+    let(:game_statistic_double) { class_double('GameStatistic') }
+    let(:game) { described_class.new(game_statistic_double) }
+
+    before do
+      allow(game_statistic_double).to receive(:secret_number=)
+      allow(game_statistic_double).to receive(:attempts_left).and_return(0)
+    end
 
     describe '#initialize' do
       context 'when game starts it initializes with secret number' do

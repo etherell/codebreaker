@@ -1,8 +1,7 @@
 module Codebreaker
   class Game
-    attr_reader :secret_number
-
-    def initialize
+    def initialize(game_statistic)
+      @game_statistic = game_statistic
       @secret_number = generate_secret_number
       @player_number = ''
       @result = ''
@@ -14,7 +13,13 @@ module Codebreaker
     end
 
     def win?
-      @result.match?(/^\+{4}$/)
+      @result == Constants::WIN_RESULT
+    end
+
+    def secret_number
+      return false unless win? || @game_statistic.attempts_left.zero?
+
+      @secret_number
     end
 
     def result
@@ -25,7 +30,9 @@ module Codebreaker
     private
 
     def generate_secret_number
-      Array.new(4) { rand(1..6) }.join
+      secret_number = Array.new(4) { rand(1..6) }.join
+      @game_statistic.secret_number = secret_number
+      secret_number
     end
 
     def clear_result
@@ -47,7 +54,7 @@ module Codebreaker
         next unless secret_digit == input_digit
 
         delete_digit_from_numbers(secret_digit)
-        @result << Consts::COMPLETE_MATCH
+        @result << Constants::COMPLETE_MATCH
       end
     end
 
@@ -58,11 +65,10 @@ module Codebreaker
 
     def numbers_partial_comparison
       @secret_number_copy.chars.each do |secret_num|
-        next if @player_number.empty?
-        next unless @player_number.chars.include?(secret_num)
+        next if @player_number.empty? || !@player_number.chars.include?(secret_num)
 
         @player_number.sub!(secret_num, '')
-        @result << Consts::PARTIAL_MATCH
+        @result << Constants::PARTIAL_MATCH
       end
     end
   end
