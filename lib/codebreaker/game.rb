@@ -59,15 +59,15 @@ module Codebreaker
     end
 
     def delete_digit_from_numbers(digit)
-      @player_number.sub!(digit, '')
-      @secret_number_copy.sub!(digit, '')
+      @player_number.tr!(digit, '')
+      @secret_number_copy.tr!(digit, '')
     end
 
     def numbers_partial_comparison
       @secret_number_copy.chars.each do |secret_num|
         next if @player_number.empty? || !@player_number.chars.include?(secret_num)
 
-        @player_number.sub!(secret_num, '')
+        @player_number.tr!(secret_num, '')
         @result << Constants::PARTIAL_MATCH
       end
     end

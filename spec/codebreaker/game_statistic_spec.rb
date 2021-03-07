@@ -11,22 +11,22 @@ module Codebreaker
 
     RSpec.shared_examples 'a player with appropriate attempts and hints quantity' do
       it 'has appropriate attempts quantity' do
-        expect(game_stats.instance_variable_get(:@attempts_total)).to eq(attempts_total)
+        expect(game_stats.attempts_total).to eq(attempts_total)
       end
 
       it 'has appropriate hints quantity' do
-        expect(game_stats.instance_variable_get(:@hints_total)).to eq(hints_total)
+        expect(game_stats.hints_total).to eq(hints_total)
       end
     end
 
     describe '#initialize' do
       context 'when game stats created' do
         it 'has zero used hints' do
-          expect(game_stats.instance_variable_get(:@hints_used)).to eq(0)
+          expect(game_stats.hints_used).to eq(0)
         end
 
         it 'has zero used attempts' do
-          expect(game_stats.instance_variable_get(:@attempts_used)).to eq(0)
+          expect(game_stats.attempts_used).to eq(0)
         end
       end
 
@@ -67,7 +67,7 @@ module Codebreaker
       end
 
       context 'when all attempts used' do
-        before { game_stats.instance_variable_set(:@attempts_used, attempts_total) }
+        before { game_stats.attempts_used = attempts_total }
 
         it 'has zero attempts left' do
           expect(attempts_left).to be_zero
@@ -135,11 +135,11 @@ module Codebreaker
       end
     end
 
-    describe '#to_h' do
-      subject(:game_stats_hash) { game_stats.to_h }
+    describe '#to_hash' do
+      subject(:game_stats_hash) { game_stats.to_hash }
 
       let(:expected_hash) do
-        { 'hints_used' => 0, 'attempts_used' => 0, 'difficulty' => 'easy', 'attempts_total' => 15, 'hints_total' => 2 }
+        { hints_used: 0, attempts_used: 0, difficulty: 'easy', attempts_total: 15, hints_total: 2 }
       end
 
       context 'when successful converted to hash' do

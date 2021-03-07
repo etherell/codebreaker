@@ -13,11 +13,11 @@ module Codebreaker
       end
     end
 
-    describe '#to_h' do
-      subject(:player_hash) { player.to_h }
+    describe '#to_hash' do
+      subject(:player_hash) { player.to_hash }
 
       context 'when successful converted to hash' do
-        let(:expected_hash) { { 'name' => name } }
+        let(:expected_hash) { { name: name } }
 
         it 'converts from object to hash' do
           expect(player_hash).to be_a(Hash)

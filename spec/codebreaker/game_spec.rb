@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Codebreaker
   RSpec.describe Game do
-    let(:game_statistic_double) { class_double('GameStatistic') }
+    let(:game_statistic_double) { instance_double('GameStatistic') }
     let(:game) { described_class.new(game_statistic_double) }
 
     before do
@@ -14,12 +14,21 @@ module Codebreaker
       context 'when game starts it initializes with secret number' do
         subject(:game_secret_number) { game.secret_number }
 
+        let(:secret_number) { '6616' }
+
         it 'has secret number' do
-          expect(game_secret_number).not_to be_nil
+          allow_any_instance_of(described_class).to receive(:generate_secret_number).and_return(secret_number)
+          expect(game_secret_number).to eq(secret_number)
         end
 
-        it 'has valid secret number' do
-          expect(game_secret_number).to match(/^[1-6]{4}$/)
+        it 'has valid secret number length' do
+          expect(game_secret_number.length).to eq(4)
+        end
+
+        it 'has valid secret number digits' do
+          game_secret_number.chars.each do |digit|
+            expect(digit.to_i).to be_between(1, 6)
+          end
         end
       end
     end
@@ -30,7 +39,9 @@ module Codebreaker
       let(:new_player_number) { '1234' }
       let(:result) { '----' }
 
-      before { game.instance_variable_set(:@result, result) }
+      before do
+        game.instance_variable_set(:@result, result)
+      end
 
       context 'when player number set' do
         it 'changes game player_number' do
