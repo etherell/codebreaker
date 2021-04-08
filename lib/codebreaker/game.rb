@@ -10,14 +10,19 @@ module Codebreaker
     def player_number=(player_number)
       clear_result
       @player_number = player_number
+      @game_statistic.attempts_used += 1
     end
 
     def win?
       @result == Constants::WIN_RESULT
     end
 
+    def lose?
+      @game_statistic.attempts_left <= 0
+    end
+
     def secret_number
-      return false unless win? || @game_statistic.attempts_left.zero?
+      return false unless win? || lose?
 
       @secret_number
     end
