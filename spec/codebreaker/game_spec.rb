@@ -7,6 +7,8 @@ module Codebreaker
 
     before do
       allow(game_statistic_double).to receive(:secret_number=)
+      allow(game_statistic_double).to receive(:attempts_used).and_return(0)
+      allow(game_statistic_double).to receive(:attempts_used=)
       allow(game_statistic_double).to receive(:attempts_left).and_return(0)
     end
 
